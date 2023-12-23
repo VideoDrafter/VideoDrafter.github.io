@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+    <meta name="description" content="VideoDrafter">
+
+    <title>VideoDrafter: Content-Consistent Multi-Scene Video Generation with LLM</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+	<!-- Font Awesome -->
+	<link href="static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	
+    <!-- Animation -->
+	<link href="static/css/animate.css" rel="stylesheet" />
+	
+    <!-- MyTemplate CSS -->
+    <link href="static/css/style.css" rel="stylesheet">
+	
+</head>
+<body>
+	<!-- title -->
+    <section class="title" id="title">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="wow bounceInLeft" data-wow-delay="0.1s"> 
+						<h1>VideoDrafter: Content-Consistent Multi-Scene Video Generation with LLM</h1> 
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<div class="wow fadeIn" data-wow-delay="0.2s">
+							<div class="hero-body" style="display: flex; justify-content: center;">
+							  <video autoplay controls muted loop width="80%">
+								<source src="./videodrafter.mp4" type="video/mp4">
+							  </video>
+							</div>
+						</div>
+					</div>							
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<h3>
+							Abstract
+						</h3>
+                        <p>
+							The recent innovations and breakthroughs in diffusion models have significantly expanded the possibilities of generating high-quality videos for the given prompts. Most existing works tackle the single-scene scenario with only one video event occurring in a single background. Extending to generate multi-scene videos nevertheless is not trivial and necessitates to nicely manage the logic in between while preserving the consistent visual appearance of key content across video scenes. In this paper, we propose a novel framework, namely VideoDrafter, for content-consistent multi-scene video generation. Technically, VideoDrafter leverages Large Language Models (LLM) to convert the input prompt into comprehensive multi-scene script that benefits from the logical knowledge learnt by LLM. The script for each scene includes a prompt describing the event, the foreground/background entities, as well as camera movement. VideoDrafter identifies the common entities throughout the script and asks LLM to detail each entity. The resultant entity description is then fed into a text-to-image model to generate a reference image for each entity. Finally, VideoDrafter outputs a multi-scene video by generating each scene video via a diffusion process that takes the reference images, the descriptive prompt of the event and camera movement into account. The diffusion model incorporates the reference images as the condition and alignment to strengthen the content consistency of multi-scene videos. Extensive experiments demonstrate that VideoDrafter outperforms the SOTA video generation models in terms of visual quality, content consistency, and user preference.
+						</p>
+					</div>
+				</div>				
+			</div>
+		</div>
+	</section>
+	<!-- /.title -->
+	
+	<body>
+	<!-- framework -->
+    <section class="framework" id="framework">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<h3>
+						Framework
+					</h3>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center center-block" style="padding-left:10px;padding-right:10px">
+						<img src="results/framework.png" class="img-responsive img-thumbnail" width="80%"/>
+					</div>
+					<p>
+						An overview of our VideoDrafter framework for content-consistent multi-scene video generation. VideoDrafter consists of three main stages: (1) multi-scene video script generation, (2) entity reference image generation, and (3) video scene generation. In the first stage, LLM is utilized to convert the input prompt into a comprehensive multi-scene script. The script for each scene includes the descriptive prompt of the event in the scene, a list of foreground objects or persons, the background, and camera movement. We then request LLM to detail the common foreground/background entities across scenes. These entity descriptions are fed into a text-to-image (T2I) model to produce reference images in the second stage. Finally, in the third stage, VideoDrafter-Img exploits the descriptive prompt of the event and the reference images of entities in each scene as the condition to generate a scene-reference image. VideoDrafter-Vid takes the scene-reference image plus temporal dynamics of the action depicted in the descriptive prompt of the event and camera movement in the script as the inputs and produces a video clip for each scene.
+					</p>
+				</div>			
+			</div>
+		</div>
+	</section>
+	<!-- /.framework -->
+	
+	<!-- results -->
+    <section class="results" id="results">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<h3>
+						Results
+					</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<h4>
+						ActivityNet Captions dataset: giving multi-scene prompt
+					</h4>
+				</div>
+            </div>				
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>A woman is resting next to crashing water.</li>
+						<li>She is smoking a pipe.</li>
+						<li>She blows out a plume of smoke.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/v_2sbF8W0_bbg.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>A woman stands in a room.</li>
+						<li>She is wearing a blue polka dot dress.</li>
+						<li>She is playing a violin.</li>
+						<li>She smiles at the end.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/v_OPp3DqFq0O0.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>This woman is shown putting on her makeup while looking in the mirror.</li>
+						<li>First she makes her eyes up and winks at the camera.</li>
+						<li>Then she says something and turns back around to do what she was doing.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/v_-uR5-jYe0Ag.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>A man is seen sitting in front of a bucket holding clothes in his hands.</li>
+						<li>Another person is seen sitting next to him sticking his hand in a bucket.</li>
+						<li>The men continue washing clothes next to one another while dipping them into a bucket.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/v_V1SEaTS9hos.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<h4>
+						Coref-SV dataset: giving multi-scene prompt
+					</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>There is a house and many trees</li>
+						<li>Cat puts cherry on a pie. Cat is done with the pie.</li>
+						<li>Cat puts pie on the table. Cat looks very happy. There are bread, a book, apples, and a pie on the table.</li>
+						<li>Cat tastes pie and Cat thinks it is delicious. Cat turns over the page.</li>
+						<li>Cat marvels at the picture on the book. Cat eats a piece of pie.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/Pororo_ENGLISH1_1_ep9.Cat.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>Mouse is looking for something in Mouse's library.</li>
+						<li>Mouse is standing on the ladder and Mouse is finding something on the bookshelf.</li>
+						<li>Mouse found the book. Mouse climbs downs a ladder.</li>
+						<li>Mouse looks at the book and questions himself.</li>
+						<li>Mouse came up with an idea and Mouse decides to make something.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/Pororo_ENGLISH1_1_ep10.Mouse.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>Teddy-Bear is reading a book, turning the page by his right paw.</li>
+						<li>In the story, Teddy-Bear wears an armor, holding a sword and riding on a white horse.</li>
+						<li>There are trees outside the window. Teddy-Bear cheers by raising his both paws.</li>
+						<li>The clock is running fast. Teddy-Bear is reading a book.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/Pororo_ENGLISH1_2_ep2.Teddy-Bear.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>There is a mountain covered with snow and trees on it. Mouse is reading a book.</li>
+						<li>Mouse is holding a book and makes a happy face.</li>
+						<li>Mouse looks happy and talks.</li>
+						<li>Mouse is holding a flower by her right paw.</li>
+						<li>Mouse is smiling and talking while holding a flower on her right paw.</li>
+						<li>Mouse is ripping a petal from the flower.</li>
+						<li>Mouse is pulling petals off the flower.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/Pororo_ENGLISH1_2_ep5.Mouse.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<h4>
+						MSR-VTT dataset: giving single-sentence prompt
+					</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>A camera captures the train in beautiful scenic landscape</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/0007.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>A young man with blue hair is making cake.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/0000.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>Spanish language music video</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/0016.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>A person with red clothes is preparing dessert in the kitchen.</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/0058.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>A baby girl is sitting in the cradle with mother</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/0065.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>A man and a woman drive a car from hills to city</li>
+					</p>
+				</div>
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="margin-top:10px; margin-bottom:10px">
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/0301.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<h4>
+						Giving real images as reference images
+					</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>The cat lies in the room</li>
+						<li>The cat lies in the driving car</li>
+						<li>The cat plays in the flowers</li>
+					</p>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center center-block" style="padding-left:10px;padding-right:10px">
+					<p>
+						Real Reference Images:
+					</p>
+					<img src="results/ref1.png" class="img-responsive img-thumbnail" width="100%"/>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:10px; margin-bottom:10px">
+					<p>
+						Generated Video:
+					</p>
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/cat.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>The parrot stands in the bedroom</li>
+						<li>The parrot stands in the forest</li>
+						<li>The parrot stands in front of the river</li>
+					</p>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center center-block" style="padding-left:10px;padding-right:10px">
+					<p>
+						Real Reference Images:
+					</p>
+					<img src="results/ref2.png" class="img-responsive img-thumbnail" width="100%"/>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:10px; margin-bottom:10px">
+					<p>
+						Generated Video:
+					</p>
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/parrot.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					<p>
+						input prompt:
+						<li>The motorcyclist stays in the town</li>
+						<li>The motorcyclist is riding on the road under the sunset</li>
+						<li>The motorcyclist is ridding on the moon</li>
+					</p>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center center-block" style="padding-left:10px;padding-right:10px">
+					<p>
+						Real Reference Images:
+					</p>
+					<img src="results/ref3.png" class="img-responsive img-thumbnail" width="100%"/>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="margin-top:10px; margin-bottom:10px">
+					<p>
+						Generated Video:
+					</p>
+					<div class="wow fadeIn" data-wow-delay="0.2s">
+						<div class="hero-body" style="display: flex; justify-content: center;">
+						  <video autoplay controls muted loop width="100%">
+							<source src="./results/rider.mp4" type="video/mp4">
+						  </video>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- /.framework -->
+	
+	<!-- Core JavaScript Files -->
+	<script src="static/js/jquery.min.js"></script>
+	<script src="static/js/bootstrap.min.js"></script>
+	<script src="static/js/jquery.easing.min.js"></script>	
+	<script src="static/js/jquery.scrollTo.js"></script>
+	<script src="static/js/wow.min.js"></script>			<!-- Reveal animation when you scroll by wow.js. It need animate.css library -->
+	<!-- Custom Theme JavaScript -->
+	<script src="static/js/custom.js"></script>
+
+</body>
+
+</html>
